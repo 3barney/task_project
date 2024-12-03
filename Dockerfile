@@ -1,5 +1,21 @@
-FROM openjdk:11-jre-slim
-VOLUME /tmp
-ARG JAR_FILE=target/project-management.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+FROM maven:3.9.4-eclipse-temurin-21 AS build
+
+WORKDIR /app
+
+COPY pom.xml .
+
+RUN mvn dependency:go-offline -B
+
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre-jammy
+
+WORKDIR /app
+
+COPY --from=build /app/target/taskmanagement-0.0.1-SNAPSHOT.jar app.jar
+
+EXPOSE 9090
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
