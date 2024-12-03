@@ -31,17 +31,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponse addTaskToProject(Long projectId, CreateTask task) {
-        // Fetch the Project entity
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found with ID: " + projectId));
 
-        // Create Task entity
         Task taskEntity = createTaskEntity(task, project);
 
-        // Save the Task entity
         Task savedTask = taskRepository.save(taskEntity);
-
-        // Convert to TaskResponse DTO
         return createTaskResponseFromEntity(savedTask);
     }
 
@@ -50,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
         Page<Task> tasks;
 
         if (status != null && dueDate != null) {
-            tasks = taskRepository.findByProjectIdAndStatusAndDueDate(projectId, status, dueDate, pageable);
+            tasks = taskRepository.findByProject_IdAndStatusAndDueDate(projectId, status, dueDate, pageable);
         } else if (status != null) {
             tasks = taskRepository.findByProject_IdAndStatus(projectId, status, pageable);
         } else if (dueDate != null) {
@@ -59,7 +54,6 @@ public class TaskServiceImpl implements TaskService {
             tasks = taskRepository.findByProjectId(projectId, pageable);
         }
 
-        // Convert list of Tasks to list of TaskResponse DTOs
         return tasks.stream()
                 .map(this::createTaskResponseFromEntity)
                 .collect(Collectors.toList());
@@ -67,17 +61,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponse updateTask(Long taskId, CreateTask task) {
-        // Fetch the existing Task entity
         Task existingTask = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found with ID: " + taskId));
 
-        // Update the Task entity
         Task updatedTask = updateExistingTask(existingTask, task);
-
-        // Save the updated Task entity
         Task savedTask = taskRepository.save(updatedTask);
-
-        // Convert to TaskResponse DTO
         return createTaskResponseFromEntity(savedTask);
     }
 

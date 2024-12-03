@@ -18,10 +18,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             Pageable pageable);
 
     Page<Task> findByProjectId(Long projectId, Pageable pageable);
-    List<Task> findByProject_Id(Long projectId);
     Page<Task> findByProject_IdAndStatus(Long projectId, Status status, Pageable pageable);
     Page<Task> findByProject_IdAndDueDate(Long projectId, LocalDate dueDate, Pageable pageable);
-    List<Task> findByProject_IdAndStatusAndDueDate(Long projectId, Status status, LocalDate dueDate);
+    Page<Task> findByProject_IdAndStatusAndDueDate(Long projectId, Status status, LocalDate dueDate, Pageable pageable);
 
 }
 

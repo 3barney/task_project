@@ -14,6 +14,12 @@ A simple Spring Boot application to manage projects and tasks.
 docker-compose up --build
 ```
 
+#### Access project on 
+http://localhost:9090
+
+### Access project documentation at
+http://localhost:9090/swagger-ui/index.html
+
 
 ### Without Docker
 mvn spring-boot:run
